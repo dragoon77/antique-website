@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine Antique Clock</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <section id="header">
+        <a href="#"><img src="img/logos.jpg" class="logo" alt="Alpine Antique Clock"></a>
+        
+        <div>
+            <ul id="navbar">
+                <li><a  href="index.html">Home</a></li>
+                <li><a  href="shop.html">Shop</a></li>
+                <li><a  href="blog.html">Blog</a></li>
+                <li><a  href="about.html">About</a></li>
+                <li><a  href="contact.html">Contact</a></li>
+                <li><a class="active" href="cart.html"><i class="fas fa-shopping-cart"></i><span id="cart-count">0</span></a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+    
+
+    <section id="page-header" class="about-header">
+       
+        <h2>Contact Us</h2>
+       
+        <p>Leave a Message! we love to hear from you!</p>
+       
+    </section>
+
+    <section id="cart" class="section-p1">
+        <table width="100%" id="cart-table">
+            <thead>
+                <tr>
+                    <td>Remove</td>
+                    <td>Image</td>
+                    <td>Product</td>
+                    <td>Price</td>
+                    <td>Quantity</td>
+                    <td>Subtotal</td>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Cart items will be added dynamically here -->
+            </tbody>
+        </table>
+    </section>
+
+    <section id="cart-add" class="section-p1">
+        <div id="subtotal">
+            <h3>Cart Total</h3>
+            <table>
+                <tr>
+                    <td>Cart Subtotal</td>
+                    <td id="cart-subtotal">$0.00</td>
+                </tr>
+                <tr>
+                    <td>Shipping</td>
+                    <td>Free</td>
+                </tr>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong id="cart-total">$0.00</strong></td>
+                </tr>
+            </table>
+            <button class="normal" onclick="window.location.href='checkout.html';">Proceed to checkout</button>
+        </div>
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="img/logos.jpg" alt="">
+            <h4>Contact</h4>
+            <p><strong>Address: </strong>20826 S Vermont Ave, Torrance, CA 90502</p>
+            <p><strong>Phone: </strong>(310)329-9980</p>
+            <p><strong>Hours: </strong>Tuesday - Saturday 10 am - 3 pm</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="img/google.webp" alt="">
+                <img src="img/app.jpg" alt="">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="img/visa.jpg" alt="">
+        </div>
+
+        <div class="copyright">
+            <p>ⓒ 2024, Alpine Antique Clock</p>
+        </div>
+
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Retrieve cart items from local storage
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            var cartTableBody = document.querySelector('#cart-table tbody');
+
+            // Function to display cart items
+            function displayCartItems() {
+                // Clear existing cart items
+                cartTableBody.innerHTML = '';
+
+                // Loop through each item in the cart and create a table row
+                cartItems.forEach(function(item, index) {
+                    var row = `
+                        <tr>
+                            <td><a href="#" class="remove-item" data-index="${index}"><i class="far fa-times-circle"></i></a></td>
+                            <td><img src="${item.image}" alt=""></td>
+                            <td>${item.productName}</td>
+                            <td>$${item.price.toFixed(2)}</td>
+                            <td><input type="number" value="${item.quantity}" min="1"></td>
+                            <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                        </tr>
+                    `;
+                    cartTableBody.innerHTML += row;
+                });
+
+                // Update cart subtotal and total
+                calculateTotal();
+
+                // Add event listeners to remove buttons
+                var removeButtons = document.querySelectorAll('.remove-item');
+                removeButtons.forEach(function(button) {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        var indexToRemove = parseInt(event.target.getAttribute('data-index'));
+                        removeCartItem(indexToRemove);
+                    });
+                });
+
+                // Update cart count in the shopping cart icon
+                updateCartCount();
+            }
+
+            // Function to remove item from cart
+            function removeCartItem(index) {
+                cartItems.splice(index, 1);
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                displayCartItems();
+            }
+
+            // Function to calculate total cart subtotal
+            function calculateTotal() {
+                var cartSubtotal = 0;
+                cartItems.forEach(function(item) {
+                    cartSubtotal += item.price * item.quantity;
+                });
+
+                // Display the total cart subtotal
+                document.querySelector('#cart-subtotal').textContent = '$' + cartSubtotal.toFixed(2);
+                // Update the total
+                document.querySelector('#cart-total').textContent = '$' + cartSubtotal.toFixed(2);
+            }
+
+            // Function to update cart count in the shopping cart icon
+            function updateCartCount() {
+                var cartCount = 0;
+                cartItems.forEach(function(item) {
+                    cartCount += item.quantity;
+                });
+                document.getElementById('cart-count').textContent = cartCount;
+            }
+
+            // Display cart items when the page loads
+            displayCartItems();
+        });
+    </script>
+</body>
+
+</html>

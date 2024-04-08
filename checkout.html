@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css"> <!-- You can link your custom stylesheet here -->
+
+    <!-- Add the style for the button here -->
+    <style>
+        /* Style for the "Place Order" button */
+        #checkout-form button[type="submit"] {
+            display: block; /* Set display to block */
+            width: 200px; /* Adjust the width as needed */
+            height: 40px; /* Set a fixed height */
+            padding: 10px; /* Adjust the padding as needed */
+            font-size: 16px; /* Adjust the font size as needed */
+            margin: 10px auto; /* Center the button horizontally */
+        }
+
+        /* Add style for the total table */
+        .total-table {
+            width: 300px; /* Set fixed width */
+            height: 150px; /* Set fixed height */
+            /* Add any additional styles here */
+        }
+
+        /* Add style for scrollable cart items */
+        .scrollable {
+            max-height: 300px; /* Set max height as needed */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #ccc; /* Add border for better visualization */
+            padding: 10px; /* Add padding */
+        }
+    </style>
+</head>
+
+<body class="checkout-page">
+
+    <header>
+        <a href="#"><img src="img/logos.jpg" class="logo" alt="Alpine Antique Clock"></a>
+        
+        <div>
+            <ul id="navbar">
+                <li><a  href="index.html">Home</a></li>
+                <li><a  href="shop.html">Shop</a></li>
+                <li><a  href="blog.html">Blog</a></li>
+                <li><a  href="about.html">About</a></li>
+                <li><a  href="contact.html">Contact</a></li>
+                <li><a class="active" href="cart.html"><i class="fas fa-shopping-cart"></i><span id="cart-count">0</span></a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </header>
+    
+    <main>
+        <form id="checkout-form" action="/checkout" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" required></textarea><br>
+
+            <label for="card-number">Credit Card Number:</label>
+            <input type="text" id="card-number" name="card-number" required><br>
+
+            <label for="expiry">Expiry Date:</label>
+            <input type="text" id="expiry" name="expiry" placeholder="MM/YY" required><br>
+
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" name="cvv" required><br>
+
+            <!-- Display cart items -->
+            <section id="cart-items" class="scrollable">
+                <!-- Cart items will be dynamically added here -->
+            </section>
+
+            <!-- Total table from shopping cart page -->
+            <section id="cart-add" class="section-p1">
+                <div id="subtotal">
+                    <h3>Cart Total</h3>
+                    <table class="total-table">
+                        <tr>
+                            <td>Cart Subtotal</td>
+                            <td id="cart-subtotal">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Shipping</td>
+                            <td>Free</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><strong id="cart-total">$0.00</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <button type="submit">Place Order</button>
+        </form>
+    </main>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="img/logos.jpg" alt="">
+            <h4>Contact</h4>
+            <p><strong>Address: </strong>20826 S Vermont Ave, Torrance, CA 90502</p>
+            <p><strong>Phone: </strong>(310)329-9980</p>
+            <p><strong>Hours: </strong>Tuesday - Saturday 10 am - 3 pm</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="img/google.webp" alt="">
+                <img src="img/app.jpg" alt="">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="img/visa.jpg" alt="">
+        </div>
+
+        <div class="copyright">
+            <p>ⓒ 2024, Alpine Antique Clock</p>
+        </div>
+
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Retrieve cart items from local storage
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            var cartItemsSection = document.getElementById('cart-items');
+            var cartSubtotalElement = document.getElementById('cart-subtotal');
+            var cartTotalElement = document.getElementById('cart-total');
+
+            // Function to display cart items
+            function displayCartItems() {
+                // Clear existing cart items
+                cartItemsSection.innerHTML = '';
+
+                // Loop through each item in the cart and create a list
+                cartItems.forEach(function(item) {
+                    var listItem = document.createElement('div');
+                    listItem.innerHTML = `
+                        <div>
+                            <img src="${item.image}" alt="${item.productName}">
+                            <p>${item.productName}</p>
+                            <p>$${item.price.toFixed(2)}</p>
+                            <p>Quantity: ${item.quantity}</p>
+                            <p>Subtotal: $${(item.price * item.quantity).toFixed(2)}</p>
+                        </div>
+                    `;
+                    cartItemsSection.appendChild(listItem);
+                });
+
+                // Update the total cart subtotal and total
+                calculateTotal();
+            }
+
+            // Function to calculate total cart subtotal
+            function calculateTotal() {
+                var cartSubtotal = 0;
+                cartItems.forEach(function(item) {
+                    cartSubtotal += item.price * item.quantity;
+                });
+
+                // Display the total cart subtotal
+                cartSubtotalElement.textContent = '$' + cartSubtotal.toFixed(2);
+                // Update the total
+                cartTotalElement.textContent = '$' + cartSubtotal.toFixed(2);
+            }
+
+            // Display cart items when the page loads
+            displayCartItems();
+        });
+    </script>
+
+</body>
+
+</html>
